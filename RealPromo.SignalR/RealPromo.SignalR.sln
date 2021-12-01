@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealPromo.API", "RealPromo.API\RealPromo.API.csproj", "{4293705F-A184-40CD-998A-06486D69EEEE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4293705F-A184-40CD-998A-06486D69EEEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4293705F-A184-40CD-998A-06486D69EEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4293705F-A184-40CD-998A-06486D69EEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4293705F-A184-40CD-998A-06486D69EEEE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1DF419BA-3F93-4A4E-9CD5-FB6DBC96BE36}
+	EndGlobalSection
+EndGlobal
