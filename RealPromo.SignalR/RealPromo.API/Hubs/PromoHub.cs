@@ -8,7 +8,8 @@ namespace RealPromo.API.Hubs
     {
         public async Task CadastrarPromocao(Promocao promocao)
         {
-
+            await Clients.Caller.SendAsync("CadastradoSucesso");
+            await Clients.Others.SendAsync("ReceberPromocao", promocao);
         }
     }
 }
