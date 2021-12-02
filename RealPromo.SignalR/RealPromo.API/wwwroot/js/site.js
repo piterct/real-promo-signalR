@@ -14,10 +14,10 @@ debugger
 if (btnCadastrar != null) {
     btnCadastrar.addEventListener("click", function () {
 
-        var empresa = document.getElementyById("Empresa").value;
-        var chamada = document.getElementyById("Chamada").value;
-        var regras = document.getElementyById("Regras").value;
-        var enderecoUrl = document.getElementyById("EnderecoUrl").value;
+        var empresa = document.getElementById("Empresa").value;
+        var chamada = document.getElementById("Chamada").value;
+        var regras = document.getElementById("Regras").value;
+        var enderecoUrl = document.getElementById("EnderecoUrl").value;
 
         var promocao = { Empresa: empresa, Chamada: chamada, Regras: regras, EnderecoUrl: enderecoUrl };
 
