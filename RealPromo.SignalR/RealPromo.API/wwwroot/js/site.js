@@ -12,7 +12,9 @@ connection.on("CadastradoSucesso", function () {
     mensagem.innerHTML = "Cadastro de promoção realizado com sucesso!";
 })
 
-
+connection.on("ReceberPromocao", function (promocao) {
+    console.info(promocao);
+})
 
 var btnCadastrar = document.getElementById("BtnCadastrar")
 
