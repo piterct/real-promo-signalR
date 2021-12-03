@@ -1,6 +1,5 @@
 ﻿
 var connection = new signalR.HubConnectionBuilder().withUrl("/PromoHub").build();
-debugger
 
 connection.start().then(function () {
     console.info("Connected!")
@@ -8,8 +7,15 @@ connection.start().then(function () {
     console.error(err.toString())
 });
 
+connection.on("CadastradoSucesso", function () {
+    var mensagem = document.getElementById("Mensagem");
+    mensagem.innerHTML = "Cadastro de promoção realizado com sucesso!";
+})
+
+
+
 var btnCadastrar = document.getElementById("BtnCadastrar")
-debugger 
+
 
 if (btnCadastrar != null) {
     btnCadastrar.addEventListener("click", function () {
