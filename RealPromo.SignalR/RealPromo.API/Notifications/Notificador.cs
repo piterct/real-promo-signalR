@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace RealPromo.API.Notifications
 {
-    public class Notificador
+    public class Notificador: INotificador
     {
         private List<Notificacao> _notificacoes;
 
