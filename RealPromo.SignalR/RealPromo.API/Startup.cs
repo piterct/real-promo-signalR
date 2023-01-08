@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using RealPromo.API.Hubs;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +25,50 @@ namespace RealPromo.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+         .AddJwtBearer(options =>
+         {
+             options.Authority = "https://localhost:5001/";
+             options.Audience = "dataEventRecordsApi";
+             options.IncludeErrorDetails = true;
+             options.SaveToken = true;
+             options.TokenValidationParameters = new TokenValidationParameters
+             {
+                 ValidateIssuer = true,
+                 ValidateAudience = true,
+                 ValidateIssuerSigningKey = true,
+                 NameClaimType = "email",
+                 RoleClaimType = "role",
+                 ValidAudiences = new List<string> { "dataEventRecordsApi" },
+                 ValidIssuers = new List<string> { "https://localhost:5001/" }
+             };
+             options.Events = new JwtBearerEvents
+             {
+                 OnMessageReceived = context =>
+                 {
+                     if ((context.Request.Path.Value!.StartsWith("/signalrhome")
+                         || context.Request.Path.Value!.StartsWith("/looney")
+                         || context.Request.Path.Value!.StartsWith("/usersdm")
+                        )
+                         && context.Request.Query.TryGetValue("token", out StringValues token)
+                     )
+                     {
+                         context.Token = token;
+                     }
+
+                     return Task.CompletedTask;
+                 },
+                 OnAuthenticationFailed = context =>
+                 {
+                     var te = context.Exception;
+                     return Task.CompletedTask;
+                 }
+             };
+         });
+
             services.AddControllersWithViews();
             services.AddSignalR();
         }
