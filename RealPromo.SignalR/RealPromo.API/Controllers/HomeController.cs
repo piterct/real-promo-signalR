@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RealPromo.API.Models;
+using RealPromo.API.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,8 +10,12 @@ using System.Threading.Tasks;
 
 namespace RealPromo.API.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : MainController
     {
+        public HomeController(INotificador notificador) : base(notificador)
+        {
+        }
+
         public ActionResult Index()
         {
             return View();
