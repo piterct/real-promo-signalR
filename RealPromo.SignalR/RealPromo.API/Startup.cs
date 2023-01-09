@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealPromo.API.Hubs;
 using RealPromo.API.Notifications;
+using RealPromo.API.Service;
 using RealPromo.API.Settings;
 using System;
 using System.Collections.Generic;
@@ -39,13 +40,14 @@ namespace RealPromo.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            // JWT
+           // Settings
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
 
+            // JWT
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -121,6 +123,7 @@ namespace RealPromo.API
 
 
             services.AddScoped<INotificador, Notificador>();
+            services.AddScoped<IAuthService, AuthService>();
 
         }
 
