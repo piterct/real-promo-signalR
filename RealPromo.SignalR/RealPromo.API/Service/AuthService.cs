@@ -5,25 +5,34 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System;
+using RealPromo.API.ViewModels;
+using RealPromo.API.Settings;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RealPromo.API.Service
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
-        private async Task<LoginResponseViewModel> GerarJwt(string email)
+        private readonly AppSettings _appSettings;
+        public AuthService(IOptions<AppSettings> appSettings)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            var claims = await _userManager.GetClaimsAsync(user);
-            var userRoles = await _userManager.GetRolesAsync(user);
+            _appSettings = appSettings.Value;
+        }
+
+        public async Task<LoginResponseViewModel> GerarJwt(string email, string password)
+        {
+            var user = await GetUser(email, password);
+            var claims = new List<Claim>();
+            var userRoles = user.Claims;
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
             foreach (var userRole in userRoles)
             {
-                claims.Add(new Claim("role", userRole));
+                claims.Add(new Claim("role", userRole.Value));
             }
 
             var identityClaims = new ClaimsIdentity();
@@ -56,5 +65,24 @@ namespace RealPromo.API.Service
 
             return response;
         }
+
+        public async Task<UserTokenViewModel> GetUser(string email, string password)
+        {
+            if (email == "signalR@teste.com.br" && password == "signalRTeste")
+            {
+                return await Task.FromResult(new UserTokenViewModel
+                {
+                    Id = "EFB17D2F-8D5E-4DC5-89B6-C3FF9856A949",
+                    Email = email,
+                    Claims = new List<ClaimViewModel>() { new ClaimViewModel { Type = "Admin", Value = "Editar" },
+                        new ClaimViewModel { Type = "Admin", Value = "Adicionar" },
+                        new ClaimViewModel { Type = "Admin", Value = "Excluir" } }
+                });
+            }
+
+            return null;
+        }
+
+        
     }
 }
