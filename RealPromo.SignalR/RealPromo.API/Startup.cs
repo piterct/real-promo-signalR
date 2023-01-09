@@ -9,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealPromo.API.Hubs;
+using RealPromo.API.Notifications;
 using RealPromo.API.Settings;
 using System;
 using System.Collections.Generic;
@@ -117,6 +118,9 @@ namespace RealPromo.API
 
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIs", Version = "v1" });
             });
+
+
+            services.AddScoped<INotificador, Notificador>();
 
         }
 
