@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealPromo.API.Hubs;
 using RealPromo.API.Notifications;
+using RealPromo.API.Repository;
 using RealPromo.API.Service;
 using RealPromo.API.Settings;
 using System;
@@ -124,6 +125,7 @@ namespace RealPromo.API
 
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IClientRepository, ClientRepository>();
 
         }
 
