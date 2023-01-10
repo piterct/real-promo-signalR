@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RealPromo.API.Repository
 {
-    public class ClientRepository
+    public class ClientRepository : IClientRepository
     {
         public async Task<List<ClientsViewModel>> Clients()
         {
