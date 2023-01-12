@@ -30,6 +30,8 @@ namespace RealPromo.API.Service
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
             foreach (var userRole in userRoles)
             {
                 claims.Add(new Claim("role", userRole.Value));
@@ -42,6 +44,7 @@ namespace RealPromo.API.Service
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
+                
                 Issuer = _appSettings.Emissor,
                 Audience = _appSettings.ValidoEm,
                 Subject = identityClaims,
@@ -74,15 +77,17 @@ namespace RealPromo.API.Service
                 {
                     Id = "EFB17D2F-8D5E-4DC5-89B6-C3FF9856A949",
                     Email = email,
-                    Claims = new List<ClaimViewModel>() { new ClaimViewModel { Type = "Admin", Value = "Editar" },
-                        new ClaimViewModel { Type = "Admin", Value = "Adicionar" },
-                        new ClaimViewModel { Type = "Admin", Value = "Excluir" } }
+                    Claims = new List<ClaimViewModel>()
+
                 });
             }
 
             return null;
         }
 
-        
+        private static long ToUnixEpochDate(DateTime date)
+         => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+
     }
 }
