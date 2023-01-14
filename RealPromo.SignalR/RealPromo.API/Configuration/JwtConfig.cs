@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using RealPromo.API.Settings;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RealPromo.API.Configuration
 {
@@ -36,7 +39,33 @@ namespace RealPromo.API.Configuration
                     ValidAudience = appSettings.ValidoEm,
                     ValidIssuer = appSettings.Emissor
                 };
-            });
+
+                // events jwt to use websocket connection
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Path.Value!.StartsWith("/PromoHub")
+                            && 
+                            context.Request.Query.TryGetValue("access_token", out StringValues token)
+                            )
+                        {
+                            context.Token = token;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        var te = context.Exception;
+                        return Task.CompletedTask;
+                    }
+                };
+            }
+
+
+            
+            );
 
             return services;
         }
