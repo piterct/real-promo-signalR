@@ -5,7 +5,6 @@
 var connection = new signalR.HubConnectionBuilder()
     .withUrl("/PromoHub", {
         accessTokenFactory: async () => {
-            debugger;
             if (connection.connection.accessToken === null || 'undefined') {
                 connection.accessToken = getItemLocalStorage("tokenRealPromo");
             }
@@ -13,8 +12,6 @@ var connection = new signalR.HubConnectionBuilder()
         }
     })
     .build();
-
-debugger;
 
 start();
 
@@ -73,14 +70,12 @@ var btnCadastrar = document.getElementById("BtnCadastrar")
 
 if (btnCadastrar != null) {
     btnCadastrar.addEventListener("click", function () {
-        debugger;
         var empresa = document.getElementById("Empresa").value;
         var chamada = document.getElementById("Chamada").value;
         var regras = document.getElementById("Regras").value;
         var enderecoUrl = document.getElementById("EnderecoUrl").value;
 
         var promocao = { Empresa: empresa, Chamada: chamada, Regras: regras, EnderecoUrl: enderecoUrl };
-        debugger;
         connection.invoke("CadastrarPromocao", promocao)
             .then(function () {
                 console.log("Cadastrado com sucesso!")
@@ -92,10 +87,8 @@ if (btnCadastrar != null) {
 }
 
 async function start() {
-    debugger;
     connection.start().then(async function () {
         var token = getItemLocalStorage("tokenRealPromo");
-        debugger;
         console.info("Connected!")
     }).catch(function (err) {
         console.error(err.toString())
@@ -108,7 +101,7 @@ async function start() {
 async function getToken() {
 
     const json = { email: "signalR@teste.com.br", password: "signalRTeste" };
-    debugger
+
     await fetch('https://localhost:44391/api/Auth/autentica', {
         method: 'POST',
         headers: {
@@ -118,7 +111,7 @@ async function getToken() {
         body: JSON.stringify(json)
 
     }).then(async function (response) {
-        debugger;
+       
         // The API call was successful!
         if (response.ok) {
             return response.json();
@@ -126,7 +119,7 @@ async function getToken() {
             return Promise.reject(response);
         }
     }).then(async function (responseData) {
-        debugger;
+       
         // This is the JSON from our response
         var token = responseData.data.accessToken;
         setLocalStorage("tokenRealPromo", token);
@@ -139,13 +132,10 @@ async function getToken() {
 }
 
 function setLocalStorage(name, value) {
-    debugger;
     window.localStorage.setItem(name, value);
-    debugger;
 }
 
 function getItemLocalStorage(name) {
-    debugger;
     return window.localStorage.getItem(name);
 }
 
