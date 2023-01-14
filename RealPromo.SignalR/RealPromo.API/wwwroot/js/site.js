@@ -81,11 +81,12 @@ async function start() {
     debugger;
     connection.start().then(async function () {
         await getToken();
+        var token = getItemLocalStorage("tokenRealPromo");
         debugger;
         console.info("Connected!")
     }).catch(function (err) {
         console.error(err.toString())
-        setInterval(() => start(), 5000);
+        setInterval(() => start(), 50000);
     });
 }
 
@@ -115,12 +116,24 @@ async function getToken() {
         debugger;
         // This is the JSON from our response
         var token = responseData.data.accessToken;
+        setLocalStorage("tokenRealPromo", token);
         console.log(responseData);
     }).catch(function (err) {
         // There was an error
         console.warn('Something went wrong.', err);
     });
 
+}
+
+function setLocalStorage(name, value) {
+    debugger;
+    window.localStorage.setItem(name, value);
+    debugger;
+}
+
+function getItemLocalStorage(name) {
+    debugger;
+    return window.localStorage.getItem(name);
 }
 
 
