@@ -88,11 +88,10 @@ if (btnCadastrar != null) {
 
 async function start() {
     connection.start().then(async function () {
-        var token = getItemLocalStorage("tokenRealPromo");
         console.info("Connected!")
     }).catch(function (err) {
         console.error(err.toString())
-        setInterval(() => start(), 50000);
+        setInterval(() => start(), 5000);
     });
 }
 
@@ -111,7 +110,7 @@ async function getToken() {
         body: JSON.stringify(json)
 
     }).then(async function (response) {
-       
+
         // The API call was successful!
         if (response.ok) {
             return response.json();
@@ -119,7 +118,7 @@ async function getToken() {
             return Promise.reject(response);
         }
     }).then(async function (responseData) {
-       
+
         // This is the JSON from our response
         var token = responseData.data.accessToken;
         setLocalStorage("tokenRealPromo", token);
