@@ -1,7 +1,21 @@
-﻿
-var connection = new signalR.HubConnectionBuilder().withUrl("/PromoHub").build();
+﻿getToken();
+
+//var connection = new signalR.HubConnectionBuilder().withUrl("/PromoHub").build();
+
+var connection = new signalR.HubConnectionBuilder()
+    .withUrl("/PromoHub", {
+        accessTokenFactory: async () => {
+            debugger;
+            if (connection.connection.accessToken === null || 'undefined') {
+                connection.accessToken = getItemLocalStorage("tokenRealPromo");
+            }
+            return connection.accessToken;
+        }
+    })
+    .build();
 
 debugger;
+
 start();
 
 connection.onclose(async () => {
@@ -59,14 +73,14 @@ var btnCadastrar = document.getElementById("BtnCadastrar")
 
 if (btnCadastrar != null) {
     btnCadastrar.addEventListener("click", function () {
-
+        debugger;
         var empresa = document.getElementById("Empresa").value;
         var chamada = document.getElementById("Chamada").value;
         var regras = document.getElementById("Regras").value;
         var enderecoUrl = document.getElementById("EnderecoUrl").value;
 
         var promocao = { Empresa: empresa, Chamada: chamada, Regras: regras, EnderecoUrl: enderecoUrl };
-
+        debugger;
         connection.invoke("CadastrarPromocao", promocao)
             .then(function () {
                 console.log("Cadastrado com sucesso!")
@@ -80,7 +94,6 @@ if (btnCadastrar != null) {
 async function start() {
     debugger;
     connection.start().then(async function () {
-        await getToken();
         var token = getItemLocalStorage("tokenRealPromo");
         debugger;
         console.info("Connected!")
