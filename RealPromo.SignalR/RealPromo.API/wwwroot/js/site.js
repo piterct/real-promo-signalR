@@ -1,6 +1,7 @@
 ﻿
 var connection = new signalR.HubConnectionBuilder().withUrl("/PromoHub").build();
 
+debugger;
 start();
 
 connection.onclose(async () => {
@@ -76,11 +77,50 @@ if (btnCadastrar != null) {
     })
 }
 
-function start() {
-    connection.start().then(function () {
+async function start() {
+    debugger;
+    connection.start().then(async function () {
+        await getToken();
+        debugger;
         console.info("Connected!")
     }).catch(function (err) {
         console.error(err.toString())
         setInterval(() => start(), 5000);
     });
 }
+
+
+
+async function getToken() {
+
+    const json = { email: "signalR@teste.com.br", password: "signalRTeste" };
+    debugger
+    await fetch('https://localhost:44391/api/Auth/autentica', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(json)
+
+    }).then(async function (response) {
+        debugger;
+        // The API call was successful!
+        if (response.ok) {
+            return response.json();
+        } else {
+            return Promise.reject(response);
+        }
+    }).then(async function (responseData) {
+        debugger;
+        // This is the JSON from our response
+        var token = responseData.data.accessToken;
+        console.log(responseData);
+    }).catch(function (err) {
+        // There was an error
+        console.warn('Something went wrong.', err);
+    });
+
+}
+
+
