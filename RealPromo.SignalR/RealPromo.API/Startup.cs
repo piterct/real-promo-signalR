@@ -6,8 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RealPromo.API.Configuration;
 using RealPromo.API.Hubs;
 using RealPromo.API.Notifications;
 using RealPromo.API.Repository;
@@ -41,57 +43,8 @@ namespace RealPromo.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-           // Settings
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
             // JWT
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-         .AddJwtBearer(options =>
-         {
-             options.Authority = "https://localhost:5001/";
-             options.Audience = "dataEventRecordsApi";
-             options.IncludeErrorDetails = true;
-             options.SaveToken = true;
-             options.TokenValidationParameters = new TokenValidationParameters
-             {
-                 ValidateIssuer = true,
-                 ValidateAudience = true,
-                 ValidateIssuerSigningKey = true,
-                 NameClaimType = "email",
-                 RoleClaimType = "role",
-                 ValidAudiences = new List<string> { "dataEventRecordsApi" },
-                 ValidIssuers = new List<string> { "https://localhost:5001/" }
-             };
-             options.Events = new JwtBearerEvents
-             {
-                 OnMessageReceived = context =>
-                 {
-                     if ((
-                         //context.Request.Path.Value!.StartsWith("/PromoHub" || )
-                         context.Request.Path.Value!.StartsWith("/looney")
-                         || context.Request.Path.Value!.StartsWith("/usersdm")
-                        )
-                         && context.Request.Query.TryGetValue("token", out StringValues token)
-                     )
-                     {
-                         context.Token = token;
-                     }
-
-                     return Task.CompletedTask;
-                 },
-                 OnAuthenticationFailed = context =>
-                 {
-                     var te = context.Exception;
-                     return Task.CompletedTask;
-                 }
-             };
-         });
+            services.AddJwtConfiguration(Configuration);
 
             services.AddControllersWithViews();
             services.AddSignalR();
@@ -152,9 +105,8 @@ namespace RealPromo.API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
-
             app.UseAuthentication();
+            app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
