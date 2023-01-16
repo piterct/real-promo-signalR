@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RealPromo.API.Hubs
 {
 
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PromoHub : Hub
     {
         public async Task CadastrarPromocao(Promocao promocao)
