@@ -19,7 +19,7 @@ namespace RealPromo.API.Controllers
             _clientRepository = clientRepository;
         }
 
-        [HttpGet("clients")]
+        [HttpGet("clientes")]
         public async Task<ActionResult> Cliente()
         {
             return CustomResponse(await _clientRepository.Clients());
